@@ -215,6 +215,12 @@
           </svg>
           Kopieer Handtekening
         </button>
+        <button class="btn btn-secondary" onclick="downloadSignature()" style="margin-top: 8px; background: #666; color: white;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Download .htm bestand
+        </button>
         <div id="copy-feedback" class="copy-feedback"></div>
       </div>
     </div>
@@ -242,23 +248,29 @@
         <li>Klik <strong>Opslaan</strong></li>
       </ol>
 
-      <h3>Outlook voor Mac</h3>
+      <h3>Outlook voor Mac (Aanbevolen methode)</h3>
       <ol>
-        <li>Vul hierboven je gegevens in en klik op <strong>"Kopieer Handtekening"</strong></li>
-        <li>Open Outlook en ga naar <strong>Outlook → Voorkeuren → Handtekeningen</strong></li>
-        <li>Klik op <strong>"+"</strong> om een nieuwe handtekening toe te voegen</li>
-        <li>Geef een naam en plak met <strong>Cmd+V</strong></li>
-        <li>Sluit het venster om op te slaan</li>
+        <li>Vul hierboven je gegevens in</li>
+        <li>Klik op <strong>"Download .htm bestand"</strong></li>
+        <li>Open het gedownloade bestand in Safari of Chrome</li>
+        <li>Selecteer alles (Cmd+A) en kopieer (Cmd+C)</li>
+        <li>Open Outlook → <strong>Voorkeuren → Handtekeningen</strong></li>
+        <li>Klik <strong>"+"</strong>, geef een naam, en plak (Cmd+V)</li>
+      </ol>
+
+      <h3>Outlook voor Mac (Alternatief: direct plakken)</h3>
+      <ol>
+        <li>Klik op <strong>"Kopieer Handtekening"</strong></li>
+        <li>Plak direct in een <strong>nieuwe email</strong> (niet in signature instellingen)</li>
+        <li>Dit werkt correct, maar moet elke keer handmatig gedaan worden</li>
       </ol>
 
       <div class="note">
         <strong>Tip:</strong> Stuur na het instellen een test-email naar jezelf om te controleren of de handtekening correct wordt weergegeven.
       </div>
 
-      <div class="note" style="background: #ffebee; border-left-color: #f44336; margin-top: 12px;">
-        <strong>Bekend probleem - Nieuwe Outlook voor Mac:</strong><br>
-        De nieuwe Outlook voor Mac heeft een bug waarbij link-kleuren worden overschreven naar blauw.
-        <strong>Workaround:</strong> Na het plakken, selecteer elke link apart, klik rechtermuisknop → "Bewerken" en pas de kleur handmatig aan naar roze (#FF1469).
+      <div class="note" style="background: #e3f2fd; border-left-color: #2196f3; margin-top: 12px;">
+        <strong>Over het logo:</strong> Het logo wordt geladen van een externe URL. In sommige email clients moet je eerst op "Afbeeldingen laden" klikken voordat het logo zichtbaar wordt.
       </div>
     </div>
 
@@ -318,7 +330,7 @@ a {color: #FF1469 !important; text-decoration: none !important;}
     </td>
     <td style="padding-left: 14px; vertical-align: top;" valign="top">
       <span style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px;">
-        <a href="tel:${phone.replace(/\s/g, '')}" style="color: #FF1469 !important; text-decoration: none !important;"><span style="color: #FF1469;">${phone}</span></a><br>
+        <span style="color: #FF1469;">${phone}</span><br>
         <a href="mailto:${email}" style="color: #FF1469 !important; text-decoration: none !important;"><span style="color: #FF1469;">${email}</span></a><br>
         <a href="https://www.qisum.nl" style="color: #FF1469 !important; text-decoration: none !important;"><strong style="color: #FF1469;">www.qisum.nl</strong></a>
       </span>
@@ -395,6 +407,36 @@ a {color: #FF1469 !important; text-decoration: none !important;}
       setTimeout(() => {
         feedback.className = 'copy-feedback';
       }, 5000);
+    }
+
+    function downloadSignature() {
+      const name = document.getElementById('name').value || 'signature';
+      const signatureHTML = getSignatureHTML();
+
+      // Wrap in proper HTML document structure
+      const fullHTML = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Email Signature</title>
+</head>
+<body>
+${signatureHTML}
+</body>
+</html>`;
+
+      // Create download
+      const blob = new Blob([fullHTML], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name.replace(/\s+/g, '_') + '_signature.htm';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showFeedback('success', 'Bestand gedownload! Importeer in Outlook via Voorkeuren → Handtekeningen');
     }
   </script>
 </body>
