@@ -286,29 +286,33 @@
       const phone = document.getElementById('phone').value || '+31 6 12345678';
       const email = document.getElementById('email').value || 'email@qisum.nl';
 
-      return `<div style="font-family: Arial, sans-serif; font-size: 12px; color: #0D0D0D; line-height: 1.4;">
-  <b style="font-size: 13px;">${firstName} ${lastName}</b><br>
-  <span style="color: #555;">${jobTitle}</span>
-</div>
-<br>
-<table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
+      // Outlook-proof HTML signature using <font> tags inside <a> to force colors
+      // Based on: https://www.litmus.com/blog/how-to-remove-blue-links-in-html-emails
+      // and: https://support.xink.io/support/solutions/articles/1000267288-html-pro-how-to-style-email-signature-links
+      return `<table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; font-family: Arial, sans-serif;">
   <tr>
-    <td style="padding-right: 16px; vertical-align: top;">
-      <img src="${LOGO_URL}" alt="Qisum" width="48" height="65" style="display: block; border: 0;">
+    <td colspan="3" style="padding-bottom: 12px;">
+      <font face="Arial, sans-serif" color="#0D0D0D" style="font-size: 14px;"><b>${firstName} ${lastName}</b></font><br>
+      <font face="Arial, sans-serif" color="#666666" style="font-size: 12px;">${jobTitle}</font>
     </td>
-    <td style="padding-right: 20px; vertical-align: top; border-right: 1px solid #E0E0E0;">
-      <span style="font-family: Arial, sans-serif; font-size: 12px; color: #0D0D0D; line-height: 1.5;">
+  </tr>
+  <tr>
+    <td style="padding-right: 16px; vertical-align: top; width: 48px; min-width: 48px;">
+      <img src="${LOGO_URL}" alt="Qisum" width="48" height="65" style="display: block; border: 0; width: 48px; min-width: 48px; height: auto;">
+    </td>
+    <td style="padding-right: 16px; vertical-align: top; border-right: 1px solid #E0E0E0; white-space: nowrap;">
+      <font face="Arial, sans-serif" color="#0D0D0D" style="font-size: 12px; line-height: 1.6;">
         <b>Qisum Benelux BV</b><br>
-        <a href="https://maps.google.com/?q=Hoogoorddreef+62,+1101+BE+Amsterdam" style="color: #0D0D0D; text-decoration: none;">Hoogoorddreef 62<br>
-        1101 BE Amsterdam</a>
-      </span>
+        <a href="https://maps.google.com/?q=Hoogoorddreef+62,+1101+BE+Amsterdam" style="color: #0D0D0D; text-decoration: none;"><font face="Arial, sans-serif" color="#0D0D0D"><span style="color: #0D0D0D; text-decoration: none;">Hoogoorddreef 62</span></font></a><br>
+        <a href="https://maps.google.com/?q=Hoogoorddreef+62,+1101+BE+Amsterdam" style="color: #0D0D0D; text-decoration: none;"><font face="Arial, sans-serif" color="#0D0D0D"><span style="color: #0D0D0D; text-decoration: none;">1101 BE Amsterdam</span></font></a>
+      </font>
     </td>
-    <td style="padding-left: 20px; vertical-align: top;">
-      <span style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.5;">
-        <a href="tel:${phone.replace(/\s/g, '')}" style="color: #FF1469; text-decoration: none;">${phone}</a><br>
-        <a href="mailto:${email}" style="color: #FF1469; text-decoration: none;">${email}</a><br>
-        <a href="https://www.qisum.nl" style="color: #FF1469; text-decoration: none;"><b>www.qisum.nl</b></a>
-      </span>
+    <td style="padding-left: 16px; vertical-align: top; white-space: nowrap;">
+      <font face="Arial, sans-serif" style="font-size: 12px; line-height: 1.6;">
+        <a href="tel:${phone.replace(/\s/g, '')}" style="color: #FF1469; text-decoration: none;"><font face="Arial, sans-serif" color="#FF1469"><span style="color: #FF1469; text-decoration: none;">${phone}</span></font></a><br>
+        <a href="mailto:${email}" style="color: #FF1469; text-decoration: none;"><font face="Arial, sans-serif" color="#FF1469"><span style="color: #FF1469; text-decoration: none;">${email}</span></font></a><br>
+        <a href="https://www.qisum.nl" style="color: #FF1469; text-decoration: none;"><font face="Arial, sans-serif" color="#FF1469"><span style="color: #FF1469; text-decoration: none;"><b>www.qisum.nl</b></span></font></a>
+      </font>
     </td>
   </tr>
 </table>`;
