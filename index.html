@@ -258,6 +258,12 @@
       <div class="note">
         <strong>Tip:</strong> Stuur na het instellen een test-email naar jezelf om te controleren of de handtekening correct wordt weergegeven.
       </div>
+
+      <div class="note" style="background: #ffebee; border-left-color: #f44336; margin-top: 12px;">
+        <strong>Bekend probleem - Nieuwe Outlook voor Mac:</strong><br>
+        De nieuwe Outlook voor Mac heeft een bug waarbij link-kleuren worden overschreven naar blauw.
+        <strong>Workaround:</strong> Na het plakken, selecteer elke link apart, klik rechtermuisknop → "Bewerken" en pas de kleur handmatig aan naar roze (#FF1469).
+      </div>
     </div>
 
     <footer>
@@ -286,36 +292,45 @@
       const phone = document.getElementById('phone').value || '+31 6 12345678';
       const email = document.getElementById('email').value || 'email@qisum.nl';
 
-      // Outlook-proof HTML signature using <font> tags inside <a> to force colors
-      // Based on: https://www.litmus.com/blog/how-to-remove-blue-links-in-html-emails
-      // and: https://support.xink.io/support/solutions/articles/1000267288-html-pro-how-to-style-email-signature-links
-      return `<table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; font-family: Arial, sans-serif;">
+      // Simplified signature without links on address
+      // Address = plain text (stays black/white in dark mode)
+      // Contact info = links with aggressive color styling
+      // Note: New Outlook for Mac has a known bug that overrides link colors
+      // https://learn.microsoft.com/en-us/answers/questions/5550091/
+      return `<!--[if mso]>
+<style type="text/css">
+a {color: #FF1469 !important; text-decoration: none !important;}
+</style>
+<![endif]-->
+<div style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
+<table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
   <tr>
-    <td colspan="3" style="padding-bottom: 12px;">
-      <font face="Arial, sans-serif" color="#0D0D0D" style="font-size: 14px;"><b>${firstName} ${lastName}</b></font><br>
-      <font face="Arial, sans-serif" color="#666666" style="font-size: 12px;">${jobTitle}</font>
+    <td colspan="3" style="padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+      <span style="font-size: 14px; font-weight: bold; color: #000000;">${firstName} ${lastName}</span><br>
+      <span style="font-size: 12px; color: #666666;">${jobTitle}</span>
     </td>
   </tr>
   <tr>
-    <td style="padding-right: 16px; vertical-align: top; width: 48px; min-width: 48px;">
-      <img src="${LOGO_URL}" alt="Qisum" width="48" height="65" style="display: block; border: 0; width: 48px; min-width: 48px; height: auto;">
+    <td style="padding-right: 14px; vertical-align: top;" width="48">
+      <img src="${LOGO_URL}" alt="Qisum" width="48" height="65" style="display: block; border: 0; outline: none;">
     </td>
-    <td style="padding-right: 16px; vertical-align: top; border-right: 1px solid #E0E0E0; white-space: nowrap;">
-      <font face="Arial, sans-serif" color="#0D0D0D" style="font-size: 12px; line-height: 1.6;">
-        <b>Qisum Benelux BV</b><br>
-        <a href="https://maps.google.com/?q=Hoogoorddreef+62,+1101+BE+Amsterdam" style="color: #0D0D0D; text-decoration: none;"><font face="Arial, sans-serif" color="#0D0D0D"><span style="color: #0D0D0D; text-decoration: none;">Hoogoorddreef 62</span></font></a><br>
-        <a href="https://maps.google.com/?q=Hoogoorddreef+62,+1101+BE+Amsterdam" style="color: #0D0D0D; text-decoration: none;"><font face="Arial, sans-serif" color="#0D0D0D"><span style="color: #0D0D0D; text-decoration: none;">1101 BE Amsterdam</span></font></a>
-      </font>
+    <td style="padding-right: 14px; padding-left: 2px; vertical-align: top; border-right: 1px solid #E0E0E0;" valign="top">
+      <span style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #000000; line-height: 18px;">
+        <strong style="color: #000000;">Qisum Benelux BV</strong><br>
+        <span style="color: #000000;">Hoogoorddreef 62</span><br>
+        <span style="color: #000000;">1101 BE Amsterdam</span>
+      </span>
     </td>
-    <td style="padding-left: 16px; vertical-align: top; white-space: nowrap;">
-      <font face="Arial, sans-serif" style="font-size: 12px; line-height: 1.6;">
-        <a href="tel:${phone.replace(/\s/g, '')}" style="color: #FF1469; text-decoration: none;"><font face="Arial, sans-serif" color="#FF1469"><span style="color: #FF1469; text-decoration: none;">${phone}</span></font></a><br>
-        <a href="mailto:${email}" style="color: #FF1469; text-decoration: none;"><font face="Arial, sans-serif" color="#FF1469"><span style="color: #FF1469; text-decoration: none;">${email}</span></font></a><br>
-        <a href="https://www.qisum.nl" style="color: #FF1469; text-decoration: none;"><font face="Arial, sans-serif" color="#FF1469"><span style="color: #FF1469; text-decoration: none;"><b>www.qisum.nl</b></span></font></a>
-      </font>
+    <td style="padding-left: 14px; vertical-align: top;" valign="top">
+      <span style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px;">
+        <a href="tel:${phone.replace(/\s/g, '')}" style="color: #FF1469 !important; text-decoration: none !important;"><span style="color: #FF1469;">${phone}</span></a><br>
+        <a href="mailto:${email}" style="color: #FF1469 !important; text-decoration: none !important;"><span style="color: #FF1469;">${email}</span></a><br>
+        <a href="https://www.qisum.nl" style="color: #FF1469 !important; text-decoration: none !important;"><strong style="color: #FF1469;">www.qisum.nl</strong></a>
+      </span>
     </td>
   </tr>
-</table>`;
+</table>
+</div>`;
     }
 
     function updatePreview() {
