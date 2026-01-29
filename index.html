@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qisum Email Handtekening Generator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      color: #0D0D0D;
+      margin-bottom: 8px;
+    }
+    header p {
+      color: #666;
+      margin: 0;
+    }
+    .main-content {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .form-section {
+      flex: 1;
+      min-width: 300px;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .preview-section {
+      flex: 1;
+      min-width: 300px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: #FF1469;
+    }
+    .preview-box {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+    .preview-box h3 {
+      margin: 0 0 16px 0;
+      color: #333;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    #signature-preview {
+      border: 1px dashed #ddd;
+      padding: 16px;
+      background: #fafafa;
+      border-radius: 6px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .btn-primary {
+      background: #FF1469;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #e01260;
+      transform: translateY(-1px);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    .btn svg {
+      width: 18px;
+      height: 18px;
+    }
+    .copy-feedback {
+      text-align: center;
+      padding: 8px;
+      margin-top: 8px;
+      border-radius: 6px;
+      font-size: 14px;
+      display: none;
+    }
+    .copy-feedback.success {
+      display: block;
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    .copy-feedback.error {
+      display: block;
+      background: #ffebee;
+      color: #c62828;
+    }
+    .instructions {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-top: 30px;
+    }
+    .instructions h2 {
+      margin: 0 0 20px 0;
+      color: #333;
+    }
+    .instructions h3 {
+      margin: 20px 0 12px 0;
+      color: #FF1469;
+      font-size: 16px;
+    }
+    .instructions ol {
+      margin: 0;
+      padding-left: 20px;
+      line-height: 1.8;
+    }
+    .instructions li {
+      margin-bottom: 4px;
+    }
+    .note {
+      background: #fff8e1;
+      border-left: 4px solid #ffc107;
+      padding: 12px 16px;
+      margin-top: 16px;
+      border-radius: 0 6px 6px 0;
+      font-size: 14px;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: #999;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Qisum Email Handtekening</h1>
+      <p>Genereer je professionele email handtekening in een paar stappen</p>
+    </header>
+
+    <div class="main-content">
+      <div class="form-section">
+        <div class="form-group">
+          <label for="firstName">Voornaam</label>
+          <input type="text" id="firstName" placeholder="Jan">
+        </div>
+        <div class="form-group">
+          <label for="lastName">Achternaam</label>
+          <input type="text" id="lastName" placeholder="Jansen">
+        </div>
+        <div class="form-group">
+          <label for="jobTitle">Functietitel</label>
+          <input type="text" id="jobTitle" placeholder="Consultant">
+        </div>
+        <div class="form-group">
+          <label for="phone">Telefoonnummer</label>
+          <input type="tel" id="phone" placeholder="+31 6 12345678">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="jan.jansen@qisum.nl">
+        </div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-box">
+          <h3>Preview</h3>
+          <div id="signature-preview"></div>
+        </div>
+        <button class="btn btn-primary" onclick="copySignature()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          Kopieer Handtekening
+        </button>
+        <div id="copy-feedback" class="copy-feedback"></div>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h2>Installatie Instructies</h2>
+
+      <h3>Outlook Desktop (Windows)</h3>
+      <ol>
+        <li>Vul hierboven je gegevens in</li>
+        <li>Klik op <strong>"Kopieer Handtekening"</strong></li>
+        <li>Open Outlook en ga naar <strong>Bestand → Opties → E-mail → Handtekeningen</strong></li>
+        <li>Klik op <strong>"Nieuw"</strong> en geef een naam (bijv. "Qisum")</li>
+        <li>Klik in het tekstveld en plak met <strong>Ctrl+V</strong></li>
+        <li>Klik <strong>OK</strong> om op te slaan</li>
+      </ol>
+
+      <h3>Outlook Web (Office 365)</h3>
+      <ol>
+        <li>Vul hierboven je gegevens in en klik op <strong>"Kopieer Handtekening"</strong></li>
+        <li>Ga naar <strong>Instellingen</strong> (tandwiel rechtsboven)</li>
+        <li>Klik op <strong>"Alle Outlook-instellingen weergeven"</strong></li>
+        <li>Ga naar <strong>E-mail → Opstellen en beantwoorden</strong></li>
+        <li>Plak de handtekening in het tekstveld</li>
+        <li>Klik <strong>Opslaan</strong></li>
+      </ol>
+
+      <h3>Outlook voor Mac</h3>
+      <ol>
+        <li>Vul hierboven je gegevens in en klik op <strong>"Kopieer Handtekening"</strong></li>
+        <li>Open Outlook en ga naar <strong>Outlook → Voorkeuren → Handtekeningen</strong></li>
+        <li>Klik op <strong>"+"</strong> om een nieuwe handtekening toe te voegen</li>
+        <li>Geef een naam en plak met <strong>Cmd+V</strong></li>
+        <li>Sluit het venster om op te slaan</li>
+      </ol>
+
+      <div class="note">
+        <strong>Tip:</strong> Stuur na het instellen een test-email naar jezelf om te controleren of de handtekening correct wordt weergegeven.
+      </div>
+    </div>
+
+    <footer>
+      Qisum Benelux BV &copy; 2026
+    </footer>
+  </div>
+
+  <script>
+    // Configuration - UPDATE THIS URL after GitHub Pages deployment
+    const LOGO_URL = 'Qisum-logo.gif';
+    // After GitHub Pages: const LOGO_URL = 'https://qisum.github.io/email-signature/Qisum-logo.gif';
+
+    const inputs = ['firstName', 'lastName', 'jobTitle', 'phone', 'email'];
+
+    // Add event listeners to all inputs
+    inputs.forEach(id => {
+      document.getElementById(id).addEventListener('input', updatePreview);
+    });
+
+    // Initial preview
+    updatePreview();
+
+    function getSignatureHTML() {
+      const firstName = document.getElementById('firstName').value || 'Voornaam';
+      const lastName = document.getElementById('lastName').value || 'Achternaam';
+      const jobTitle = document.getElementById('jobTitle').value || 'Functietitel';
+      const phone = document.getElementById('phone').value || '+31 6 12345678';
+      const email = document.getElementById('email').value || 'email@qisum.nl';
+
+      return `<div style="font-family: Arial, sans-serif; font-size: 12px; color: #0D0D0D; line-height: 1.4;">
+  <b style="font-size: 13px;">${firstName} ${lastName}</b><br>
+  <span style="color: #555;">${jobTitle}</span>
+</div>
+<br>
+<table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
+  <tr>
+    <td style="padding-right: 16px; vertical-align: top;">
+      <img src="${LOGO_URL}" alt="Qisum" width="48" height="65" style="display: block; border: 0;">
+    </td>
+    <td style="padding-right: 20px; vertical-align: top; border-right: 1px solid #E0E0E0;">
+      <span style="font-family: Arial, sans-serif; font-size: 12px; color: #0D0D0D; line-height: 1.5;">
+        <b>Qisum Benelux BV</b><br>
+        <a href="https://maps.google.com/?q=Hoogoorddreef+62,+1101+BE+Amsterdam" style="color: #0D0D0D; text-decoration: none;">Hoogoorddreef 62<br>
+        1101 BE Amsterdam</a>
+      </span>
+    </td>
+    <td style="padding-left: 20px; vertical-align: top;">
+      <span style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.5;">
+        <a href="tel:${phone.replace(/\s/g, '')}" style="color: #FF1469; text-decoration: none;">${phone}</a><br>
+        <a href="mailto:${email}" style="color: #FF1469; text-decoration: none;">${email}</a><br>
+        <a href="https://www.qisum.nl" style="color: #FF1469; text-decoration: none;"><b>www.qisum.nl</b></a>
+      </span>
+    </td>
+  </tr>
+</table>`;
+    }
+
+    function updatePreview() {
+      document.getElementById('signature-preview').innerHTML = getSignatureHTML();
+    }
+
+    async function copySignature() {
+      const signatureHTML = getSignatureHTML();
+      const feedback = document.getElementById('copy-feedback');
+
+      try {
+        // Try modern Clipboard API with HTML support
+        if (navigator.clipboard && window.ClipboardItem) {
+          const blob = new Blob([signatureHTML], { type: 'text/html' });
+          const item = new ClipboardItem({ 'text/html': blob });
+          await navigator.clipboard.write([item]);
+          showFeedback('success', 'Handtekening gekopieerd! Plak in Outlook met Ctrl+V (of Cmd+V op Mac)');
+        } else {
+          // Fallback: use execCommand with contentEditable
+          fallbackCopy(signatureHTML);
+        }
+      } catch (err) {
+        console.error('Clipboard API failed:', err);
+        // Try fallback
+        try {
+          fallbackCopy(signatureHTML);
+        } catch (fallbackErr) {
+          showFeedback('error', 'Kopiëren mislukt. Selecteer de preview handmatig en kopieer met Ctrl+C');
+        }
+      }
+    }
+
+    function fallbackCopy(html) {
+      // Create a temporary contentEditable element
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      container.style.position = 'fixed';
+      container.style.left = '-9999px';
+      container.style.top = '0';
+      container.contentEditable = 'true';
+      document.body.appendChild(container);
+
+      // Select and copy
+      const range = document.createRange();
+      range.selectNodeContents(container);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      const success = document.execCommand('copy');
+      document.body.removeChild(container);
+      selection.removeAllRanges();
+
+      if (success) {
+        showFeedback('success', 'Handtekening gekopieerd! Plak in Outlook met Ctrl+V (of Cmd+V op Mac)');
+      } else {
+        throw new Error('execCommand copy failed');
+      }
+    }
+
+    function showFeedback(type, message) {
+      const feedback = document.getElementById('copy-feedback');
+      feedback.className = 'copy-feedback ' + type;
+      feedback.textContent = message;
+
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        feedback.className = 'copy-feedback';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
